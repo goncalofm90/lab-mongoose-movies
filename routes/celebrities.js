@@ -4,9 +4,9 @@ const Celebrity = require('../models/celebrities')
 
 // Handle GET request for website root
 router.get('/', (req, res, next) => {
-  Celebrity.find({})
+  Celebrity.find()
   .then(celebrities => {
-    res.render('celebrities/index.hbs', {celebrities});
+    res.render('celebrities/index', {celebrities});
   })
   .catch(error => {
     next(error);
@@ -17,7 +17,7 @@ router.get('/show/:id', (req, res, next)=> {
   const id = req.params.id;
   Celebrity.findById(id)
   .then(celebrities => {
-    res.render('celebrities/show.hbs', {celebrities: celebrities});
+    res.render('celebrities/show', {celebrities: celebrities});
   })
   .catch(error => {
     next(error);
@@ -25,7 +25,7 @@ router.get('/show/:id', (req, res, next)=> {
 });
 
 router.get('/create', (req, res, next)=> {
-    res.render('celebrities/create.hbs');
+    res.render('celebrities/create');
 });
 
 router.post('/create', (req, res, next) => {
@@ -43,6 +43,16 @@ console.log(req.body);
     });
 });
 
+router.post('/:id/delete', (request, response, next) => {
+  const id = request.params.id;
+  Celebrity.findByIdAndDelete(id)
+    .then(() => {
+      response.redirect('/celebrities');
+    })
+    .then(error => {
+      next(error);
+    });
+});
 
 
 
